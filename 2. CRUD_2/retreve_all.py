@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 import psycopg2
 from rich.table import Table
 from rich.console import Console
-import datetime
+from datetime import datetime, date 
+import json
+from pathlib import Path
+
 
 # Load environment variables
 load_dotenv() 
@@ -48,8 +51,12 @@ def get_all_users():
         cursor.close()
 
 
-from datetime import datetime
 
+
+
+"""
+    ##! Display All Data on Consol Table
+"""
 def display_users_in_table(users):
     # Initialize the console for printing
     console = Console()
@@ -72,9 +79,9 @@ def display_users_in_table(users):
     # Add rows to the table
     for v in users:
         # Format dates properly
-        dob = v[7].strftime('%Y-%m-%d') if isinstance(v[7], datetime.date) else "N/A"
-        created_at = v[8] if isinstance(v[8], str) else v[8].strftime('%Y-%m-%d %H:%M:%S')
-        updated_at = v[9] if isinstance(v[9], str) else v[9].strftime('%Y-%m-%d %H:%M:%S')
+        dob = v[7].strftime('%Y-%m-%d') if isinstance(v[7], date) else "N/A"
+        created_at = v[9] if isinstance(v[9], str) else v[9].strftime('%Y-%m-%d %H:%M:%S')
+        updated_at = v[10] if isinstance(v[10], str) else v[10].strftime('%Y-%m-%d %H:%M:%S')
         image = v[8] if v[8] else "N/A"  # If image is None, show N/A
         
         # Add the user row to the table
@@ -86,7 +93,60 @@ def display_users_in_table(users):
 
 
 
-# Example usage
-users = get_all_users()
-if users:
-    display_users_in_table(users)
+
+"""
+    ##! Save the data to a JSON file
+"""
+def save_users_to_json(users, file_path="users.json"):
+
+    def serialize(obj):
+        """Helper function to serialize datetime and date objects."""
+        if isinstance(obj, (datetime, date)):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        return obj
+
+    try:
+        # Serialize users to JSON format
+        users_dict = [
+            {
+                "id"         : user[0],
+                "email"      : user[1],
+                "name"       : f"{user[2]} {user[3]}",
+                "phone"      : user[4],
+                "gender"     : user[5],
+                "religion"   : user[6],
+                "dob"        : serialize(user[7]),
+                "image"      : user[8] if user[8] else "N/A",
+                "created_at" : serialize(user[9]),
+                "updated_at" : serialize(user[10]),
+            }
+            for user in users
+        ]
+
+        # Write the JSON data to a file
+        file_path = Path(file_path)
+        with file_path.open("w", encoding="utf-8") as json_file:
+            json.dump(users_dict, json_file, indent=4, ensure_ascii=False)
+
+        print(f"User data saved successfully to {file_path}")
+    except Exception as e:
+        print(f"Error saving users to JSON: {e}")
+
+
+
+
+
+
+
+
+##? Ensure the script runs only when executed directly
+if __name__ == "__main__":
+    users = get_all_users()
+    if users:
+
+        ##! IF Show Data on table
+        display_users_in_table(users)
+
+
+        ##! Save the users to a JSON file
+        save_users_to_json(users)  

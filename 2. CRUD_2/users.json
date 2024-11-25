@@ -1,0 +1,38 @@
+[
+    {
+        "id": "93436542-c36c-4df8-9b60-434461995f94",
+        "email": "rakib1515hassan@gmail.com",
+        "name": "Md Rakib Hassan",
+        "phone": "+8801515612682",
+        "gender": "Male",
+        "religion": "Islam",
+        "dob": "1995-10-20 00:00:00",
+        "image": "media/UserImage/rakib.PNG",
+        "created_at": "2024-11-18 16:21:44",
+        "updated_at": "2024-11-18 16:21:44"
+    },
+    {
+        "id": "26e5db0c-7c1c-400b-8ef4-71a210ecaf5d",
+        "email": "mrhassan@gmail.com",
+        "name": "Mr Hassan",
+        "phone": "+8801680764592",
+        "gender": "Male",
+        "religion": "Islam",
+        "dob": "1998-10-20 00:00:00",
+        "image": "N/A",
+        "created_at": "2024-11-18 16:30:05",
+        "updated_at": "2024-11-18 16:30:05"
+    },
+    {
+        "id": "8772eddd-4d72-4829-b8e5-8742364186fa",
+        "email": "tanin@gmail.com",
+        "name": "Md Tanin",
+        "phone": "+8801932717449",
+        "gender": "Male",
+        "religion": "Islam",
+        "dob": "2002-05-13 00:00:00",
+        "image": "N/A",
+        "created_at": "2024-11-18 16:31:00",
+        "updated_at": "2024-11-18 16:31:00"
+    }
+]
