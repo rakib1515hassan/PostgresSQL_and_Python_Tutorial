@@ -31,18 +31,51 @@ CREATE TABLE IF NOT EXISTS classes (
 ```
 
 ## Students table
-
-```bash
+#### For MySQL
+```sql
 CREATE TABLE IF NOT EXISTS students (
     student_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50),
-    email VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL,
     date_of_birth DATE,
-    gender ENUM('male', 'female', 'others')
+    age INT,
+    gender ENUM('male', 'female', 'others'),
+    height DECIMAL(12,2) DEFAULT 0,
+    description TEXT,
+    settings JSON,
+    skill JSON,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    email VARCHAR(100) UNIQUE NOT NULL,
+    date_of_birth DATE,
+    age INT,
+    gender gender_type,
+    height NUMERIC(12,2) DEFAULT 0,
+    description TEXT,
+    settings JSONB,
+    skill TEXT[],
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+- PostgreSQL-এ ENUM ব্যবহার করতে চাইলে আগে type তৈরি করতে হয়:
+```sql
+CREATE TYPE gender_type AS ENUM ('male', 'female', 'others');
+```
+- তারপর column এ ব্যবহার:
+```sql
+gender gender_type
+```
+
 
 ## StudentDetails table (One-to-One with students)
 
