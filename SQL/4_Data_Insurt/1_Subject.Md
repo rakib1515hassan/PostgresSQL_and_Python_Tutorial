@@ -16,14 +16,15 @@ CREATE TABLE IF NOT EXISTS subjects (
 );
 ```
 
-## Table Data  [Single Row Insert]
+## Table Data Insert
 
+- [Single Row Insert]
 ```sql
 INSERT INTO subjects (name)
 VALUES ('Mathematics');
 ```
 
-## Table Data  [Multiple Rows Insert]
+- [Multiple Rows Insert]
 
 ```sql
 INSERT INTO subjects (name)
@@ -35,7 +36,7 @@ VALUES
     ('Bangla');
 ```
 
-## More Date Insert Examples
+- More Date Insert Examples
 ```sql
 INSERT INTO subjects (name) VALUES
 ('Mathematics'),
@@ -59,4 +60,24 @@ SELECT * FROM subjects;
 - See specific columns (e.g., name) from the subjects table:
 ```sql
 SELECT name FROM subjects;
+```
+- See data with a condition (e.g., subject_id = 1):
+```sql
+SELECT * FROM subjects WHERE subject_id = 1;
+```
+- See data with sorting (e.g., order by name ascending):
+```sql
+SELECT * FROM subjects ORDER BY name ASC;
+```
+- See data with limit (e.g., limit to 5 rows):
+```sql
+SELECT * FROM subjects LIMIT 5;
+```
+- See data with offset (e.g., skip first 2 rows):
+```sql
+SELECT * FROM subjects OFFSET 2;
+```
+- See data with limit and offset (e.g., limit to 5 rows, skip first 2 rows):
+```sql
+SELECT * FROM subjects LIMIT 5 OFFSET 2;
 ```
