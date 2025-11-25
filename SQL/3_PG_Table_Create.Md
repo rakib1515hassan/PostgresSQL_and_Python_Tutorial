@@ -13,19 +13,34 @@ CREATE TABLE [IF NOT EXISTS] table_name (
 ```
 
 
-## Subjects table
-```bash
+## Subjects 
+#### For MySQL
+```sql
 CREATE TABLE IF NOT EXISTS subjects (
     subject_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS subjects (
+    subject_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+```
 
-## Classes table
-
-```bash
+## Classes 
+#### For MySQL
+```sql 
 CREATE TABLE IF NOT EXISTS classes (
     class_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS classes (
+    class_id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL
 );
 ```
@@ -51,6 +66,8 @@ CREATE TABLE IF NOT EXISTS students (
 ```
 #### For PostgreSQL
 ```sql
+CREATE TYPE gender_type AS ENUM ('male', 'female', 'others');
+
 CREATE TABLE IF NOT EXISTS students (
     student_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -79,7 +96,7 @@ gender gender_type
 
 ## StudentDetails table (One-to-One with students)
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS student_details (
     student_details_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL UNIQUE,
@@ -93,7 +110,7 @@ CREATE TABLE IF NOT EXISTS student_details (
 
 ## Teachers table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS teachers (
     teacher_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -107,7 +124,7 @@ CREATE TABLE IF NOT EXISTS teachers (
 
 ## Batches table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS batches (
     batch_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -121,7 +138,7 @@ CREATE TABLE IF NOT EXISTS batches (
 
 ## Batch Enrollments table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS batch_enrollments (
     enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
     batch_id INT NOT NULL,
@@ -139,7 +156,7 @@ CREATE TABLE IF NOT EXISTS batch_enrollments (
 
 ## Batch Teachers (Many-to-Many: batch - subject - teacher)
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS batch_teachers (
     batch_id INT NOT NULL,
     teacher_id INT NOT NULL,
@@ -156,7 +173,7 @@ CREATE TABLE IF NOT EXISTS batch_teachers (
 
 ## Exams table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS exams (
     exam_id INT AUTO_INCREMENT PRIMARY KEY,
     batch_id INT NOT NULL,
@@ -171,7 +188,7 @@ CREATE TABLE IF NOT EXISTS exams (
 
 ## Exam Subjects table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS exam_subjects (
     exam_subject_id INT AUTO_INCREMENT PRIMARY KEY,
     exam_id INT NOT NULL,
@@ -188,7 +205,7 @@ CREATE TABLE IF NOT EXISTS exam_subjects (
 
 ## Exam Results table
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS exam_results (
     result_id INT AUTO_INCREMENT PRIMARY KEY,
     exam_subject_id INT NOT NULL,
@@ -206,7 +223,7 @@ CREATE TABLE IF NOT EXISTS exam_results (
 
 ## Batch Subjects (Subjects taught in each batch)
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS batch_subjects (
     batch_id INT NOT NULL,
     subject_id INT NOT NULL,
@@ -232,7 +249,7 @@ CREATE TABLE IF NOT EXISTS batch_subjects (
 
 Example: 
 
-```bash
+```sql
 -- SET NULL example
 FOREIGN KEY (student_id) REFERENCES students(student_id)
     ON DELETE SET NULL
