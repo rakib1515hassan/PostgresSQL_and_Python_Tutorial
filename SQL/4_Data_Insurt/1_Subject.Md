@@ -55,29 +55,67 @@ INSERT INTO subjects (name) VALUES
 ## Table Data View
 - See all data from the subjects table:
 ```sql
-SELECT * FROM subjects;
+SELECT * 
+FROM subjects;
 ```
+
 - See specific columns (e.g., name) from the subjects table:
 ```sql
-SELECT name FROM subjects;
+SELECT name 
+FROM subjects;
 ```
+
 - See data with a condition (e.g., subject_id = 1):
 ```sql
-SELECT * FROM subjects WHERE subject_id = 1;
+SELECT * 
+FROM subjects 
+WHERE subject_id = 1;
 ```
+
+- See data with a condition (e.g., name = 'Physics'):
+```sql
+SELECT * 
+FROM subjects 
+WHERE name = 'Physics';
+```
+
 - See data with sorting (e.g., order by name ascending):
 ```sql
-SELECT * FROM subjects ORDER BY name ASC;
+SELECT * 
+FROM subjects 
+ORDER BY name ASC;
 ```
+- See data with sorting (e.g., order by name descending):
+```sql
+SELECT * 
+FROM subjects
+ORDER BY name DESC;
+```
+
 - See data with limit (e.g., limit to 5 rows):
 ```sql
-SELECT * FROM subjects LIMIT 5;
+SELECT * 
+FROM subjects 
+LIMIT 5;
 ```
+
 - See data with offset (e.g., skip first 2 rows):
 ```sql
-SELECT * FROM subjects OFFSET 2;
+SELECT * 
+FROM subjects 
+OFFSET 2;
 ```
+
 - See data with limit and offset (e.g., limit to 5 rows, skip first 2 rows):
 ```sql
-SELECT * FROM subjects LIMIT 5 OFFSET 2;
+SELECT * 
+FROM subjects 
+LIMIT 5 OFFSET 2;
+```
+
+- Search data with pattern matching (e.g., names starting with 'C'):
+```sql
+SELECT * 
+FROM subjects
+WHERE name LIKE '%bio%';
 ```
