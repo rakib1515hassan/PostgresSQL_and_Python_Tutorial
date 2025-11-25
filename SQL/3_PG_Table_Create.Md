@@ -442,5 +442,4 @@ FOREIGN KEY (student_id) REFERENCES students(student_id)
 -- RESTRICT example
 FOREIGN KEY (student_id) REFERENCES students(student_id)
     ON DELETE RESTRICT
-
 ```
