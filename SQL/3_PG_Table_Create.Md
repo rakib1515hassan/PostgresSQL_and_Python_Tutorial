@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS subjects (
 );
 ```
 
+
+
+
+
 ## Classes 
 #### For MySQL
 ```sql 
@@ -44,6 +48,10 @@ CREATE TABLE IF NOT EXISTS classes (
     name VARCHAR(50) NOT NULL
 );
 ```
+
+
+
+
 
 ## Students table
 #### For MySQL
@@ -94,8 +102,10 @@ gender gender_type
 ```
 
 
-## StudentDetails table (One-to-One with students)
 
+
+## StudentDetails table (One-to-One with students)
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS student_details (
     student_details_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -107,9 +117,26 @@ CREATE TABLE IF NOT EXISTS student_details (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS student_details (
+    student_details_id SERIAL PRIMARY KEY,
+    student_id INT NOT NULL UNIQUE,
+    father_name VARCHAR(100),
+    mother_name VARCHAR(100),
+    profile_pic VARCHAR(255), -- Stores image path or URL
+    CONSTRAINT fk_student
+        FOREIGN KEY (student_id) REFERENCES students(student_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+
+
+
+
 
 ## Teachers table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS teachers (
     teacher_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,9 +148,26 @@ CREATE TABLE IF NOT EXISTS teachers (
     joining_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TYPE gender_type AS ENUM ('male', 'female', 'others');
+CREATE TABLE IF NOT EXISTS teachers (
+    teacher_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    date_of_birth DATE,
+    gender gender_type,
+    joining_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+
+
+
 
 ## Batches table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS batches (
     batch_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -135,9 +179,26 @@ CREATE TABLE IF NOT EXISTS batches (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS batches (
+    batch_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    class_id INT NOT NULL,
+    CONSTRAINT fk_class
+        FOREIGN KEY (class_id) REFERENCES classes(class_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+
+
+
+
 
 ## Batch Enrollments table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS batch_enrollments (
     enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,9 +214,32 @@ CREATE TABLE IF NOT EXISTS batch_enrollments (
     UNIQUE KEY (batch_id, roll_number)
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS batch_enrollments (
+    enrollment_id SERIAL PRIMARY KEY,
+    batch_id INT NOT NULL,
+    student_id INT NOT NULL,
+    roll_number INT NOT NULL,
+    enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_batch
+        FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_student
+        FOREIGN KEY (student_id) REFERENCES students(student_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (batch_id, student_id),
+    UNIQUE (batch_id, roll_number)
+);
+```
+
+
+
+
+
 
 ## Batch Teachers (Many-to-Many: batch - subject - teacher)
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS batch_teachers (
     batch_id INT NOT NULL,
@@ -170,9 +254,32 @@ CREATE TABLE IF NOT EXISTS batch_teachers (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS batch_teachers (
+    batch_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    PRIMARY KEY (batch_id, teacher_id, subject_id),
+    CONSTRAINT fk_batch
+        FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_teacher
+        FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_subject
+        FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+
+
+
+
+
 
 ## Exams table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS exams (
     exam_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -185,9 +292,27 @@ CREATE TABLE IF NOT EXISTS exams (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS exams (
+    exam_id SERIAL PRIMARY KEY,
+    batch_id INT NOT NULL,
+    exam_name VARCHAR(100) NOT NULL,
+    exam_date DATE NOT NULL,
+    total_marks NUMERIC(5,2) NOT NULL,
+    passing_marks NUMERIC(5,2) NOT NULL,
+    CONSTRAINT fk_batch
+        FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+
+
+
+
 
 ## Exam Subjects table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS exam_subjects (
     exam_subject_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -202,9 +327,30 @@ CREATE TABLE IF NOT EXISTS exam_subjects (
     UNIQUE KEY (exam_id, subject_id)
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS exam_subjects (
+    exam_subject_id SERIAL PRIMARY KEY,
+    exam_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    max_marks NUMERIC(5,2) NOT NULL,
+    exam_date DATE NOT NULL,
+    CONSTRAINT fk_exam
+        FOREIGN KEY (exam_id) REFERENCES exams(exam_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_subject
+        FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (exam_id, subject_id)
+);
+```
+
+
+
+
 
 ## Exam Results table
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS exam_results (
     result_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -220,9 +366,30 @@ CREATE TABLE IF NOT EXISTS exam_results (
     UNIQUE KEY (exam_subject_id, student_id)
 );
 ```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS exam_results (
+    result_id SERIAL PRIMARY KEY,
+    exam_subject_id INT NOT NULL,
+    student_id INT NOT NULL,
+    marks_obtained NUMERIC(5,2) NOT NULL,
+    grade VARCHAR(2),
+    remarks VARCHAR(200),
+    CONSTRAINT fk_exam_subject
+        FOREIGN KEY (exam_subject_id) REFERENCES exam_subjects(exam_subject_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_student
+        FOREIGN KEY (student_id) REFERENCES students(student_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (exam_subject_id, student_id)
+);
+```
+
+
+
 
 ## Batch Subjects (Subjects taught in each batch)
-
+#### For MySQL
 ```sql
 CREATE TABLE IF NOT EXISTS batch_subjects (
     batch_id INT NOT NULL,
@@ -231,6 +398,20 @@ CREATE TABLE IF NOT EXISTS batch_subjects (
     FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+#### For PostgreSQL
+```sql
+CREATE TABLE IF NOT EXISTS batch_subjects (
+    batch_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    PRIMARY KEY (batch_id, subject_id),
+    CONSTRAINT fk_batch
+        FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_subject
+        FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
