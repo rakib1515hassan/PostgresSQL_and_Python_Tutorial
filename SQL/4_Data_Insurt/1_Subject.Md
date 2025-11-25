@@ -119,3 +119,15 @@ SELECT *
 FROM subjects
 WHERE name LIKE '%bio%';
 ```
+- Search data with case insensitive pattern matching (e.g., names containing 'bio'):
+```sql
+SELECT * 
+FROM subjects
+WHERE UPPER(name) LIKE UPPER('%bio%');
+```
+- Search data with case insensitive pattern matching (e.g., names containing 'bio'):
+```sql
+SELECT * 
+FROM subjects
+WHERE LOWER(name) LIKE LOWER('%bio%');
+```
