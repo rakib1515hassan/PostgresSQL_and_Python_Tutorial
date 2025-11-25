@@ -1,4 +1,4 @@
-# Data Insurt into Subject Table
+# Data Insurt into Class Table
 
 ## Table Create
 #### For MySQL
