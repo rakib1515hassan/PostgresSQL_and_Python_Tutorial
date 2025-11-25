@@ -49,3 +49,14 @@ INSERT INTO subjects (name) VALUES
 ('Geography'),
 ('Economics');
 ```
+
+
+## Table Data View
+- See all data from the subjects table:
+```sql
+SELECT * FROM subjects;
+```
+- See specific columns (e.g., name) from the subjects table:
+```sql
+SELECT name FROM subjects;
+```
